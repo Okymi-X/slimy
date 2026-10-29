@@ -148,10 +148,6 @@ figure.shot img { width: 100%; }
 .g-forms { grid-column: 1 / -1; }
 .g-chat { grid-column: 1 / span 5; }
 .g-birth { grid-column: 6 / span 7; }
-.g-powers { grid-column: 1 / span 6; }
-.g-brain { grid-column: 7 / span 6; }
-.crop .pane { aspect-ratio: 4 / 3; }
-.crop img { height: 100%; object-fit: cover; object-position: top; }
 
 /* Privacy */
 .privacy .gel { padding: var(--s7); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s7); }
@@ -211,7 +207,7 @@ footer a { color: var(--ink-soft); }
   .hero .wrap, .split, .os .wrap, .privacy .gel { grid-template-columns: minmax(0, 1fr); gap: var(--s6); }
   .split > header { position: static; }
   .privacy .gel { padding: var(--s5); }
-  .g-chat, .g-birth, .g-powers, .g-brain { grid-column: 1 / -1; }
+  .g-chat, .g-birth { grid-column: 1 / -1; }
   .platforms { grid-template-columns: minmax(0, 1fr); }
   section { padding-block: var(--s7); }
 }

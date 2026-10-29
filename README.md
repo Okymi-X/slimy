@@ -25,14 +25,6 @@ Chat. Type or use the microphone, and the answer appears above its head.
 
 Birth. On first launch it hatches, then greets you. The text is a sample from a test soul.
 
-![The Powers panel](assets/powers.png)
-
-The Powers panel, top of the list. Each power is granted for 5, 15 or 60 minutes, or not at all.
-
-![The Brain panel](assets/brain.png)
-
-The Brain panel. Pick a provider and a model, add a backup provider if you want one.
-
 ## Features
 
 - Soft body physics: a ring of points with constant volume that rests on surfaces (floor, walls, ceiling), reacts to touch, grab, stretch and throw. Simulation lives in `slimy-body` and runs in the page through WebAssembly.
