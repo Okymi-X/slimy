@@ -9,7 +9,8 @@
 <link rel="alternate" hreflang="en" href="https://slimy.okymi.org/">
 <link rel="alternate" hreflang="fr" href="https://slimy.okymi.org/fr/">
 <link rel="alternate" hreflang="x-default" href="https://slimy.okymi.org/">
-<meta name="theme-color" content="#1b2236">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#1e1e1e">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Slimy">
@@ -19,190 +20,133 @@
 <meta property="og:image" content="https://slimy.okymi.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Un slime de gel bleu translucide au petit sourire, à côté du mot Slimy.">
+<meta property="og:image:alt" content="Un slime de gel bleu au petit sourire, à côté du titre : Un slime qui vit sur votre écran.">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Slimy, un slime de gel qui vit sur votre écran">
 <meta name="twitter:description" content="Un compagnon de bureau libre qui réagit à la souris, se souvient, parle en local et demande avant chaque action.">
 <meta name="twitter:image" content="https://slimy.okymi.org/og.png">
+<meta name="twitter:image:alt" content="Un slime de gel bleu au petit sourire, à côté du titre : Un slime qui vit sur votre écran.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..700,100&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Geist:wght@400..700&amp;family=Geist+Mono:wght@400..600&amp;display=swap">
 <link rel="stylesheet" href="/style.css">
-<script>try{var t=localStorage.getItem('slimy-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Slimy","applicationCategory":"DesktopEnhancementApplication","operatingSystem":"Linux","inLanguage":"fr","license":"https://opensource.org/license/mit","url":"https://slimy.okymi.org/fr/","codeRepository":"https://github.com/Okymi-X/slimy"}</script>
 </head>
 <body>
 <a class="skip" href="#main">Aller au contenu</a>
 <header class="top">
-  <div class="wrap">
-    <a class="brand" href="/fr/"><img src="/favicon.svg" alt="" width="32" height="32">Slimy</a>
+  <div class="bar">
+    <a class="brand" href="/fr/"><svg class="mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><circle cx="16" cy="16" r="16" fill="#7d7af7"/><path d="M7 22c0-6 4-10 9-10s9 4 9 10c0 .8-.6 1.3-1.3 1.3H8.3C7.6 23.3 7 22.8 7 22z" fill="#171622"/><circle cx="13" cy="19" r="1.4" fill="#7d7af7"/><circle cx="19" cy="19" r="1.4" fill="#7d7af7"/></svg><span>Slimy</span></a>
     <nav class="nav" aria-label="Sections">
       <a href="#what">Ce qu'il fait</a>
+      <a href="#see">Le voir</a>
       <a href="#privacy">Vie privée</a>
       <a href="#install">Installer</a>
-      <a href="#source">Libre</a>
     </nav>
     <div class="tools">
-      <a class="chip" href="/" hreflang="en" lang="en" aria-label="Read in English">EN</a>
-      <button class="chip" id="motion" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5v14M15 5v14"/></svg><span class="txt">&nbsp;Images fixes</span></button>
-      <button class="chip" id="theme" type="button" aria-label="Passer au thème sombre" data-to-dark="Passer au thème sombre" data-to-light="Passer au thème clair"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4v16" /></svg></button>
+      <a class="btn tiny ghost" href="/" hreflang="en" lang="en" aria-label="Read in English">EN</a>
+      <button class="btn tiny ghost" id="motion" type="button" aria-label="Images fixes" aria-pressed="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M9 5v14M15 5v14"/></svg><span>Images fixes</span></button>
+      <a class="btn tiny primary" href="#source">Libre</a>
     </div>
   </div>
 </header>
-
 <main id="main">
-<section class="hero" aria-labelledby="h-hero">
-  <div class="wrap">
-    <div>
-      <h1 id="h-hero">Un slime qui vit sur votre écran.</h1>
-      <p class="lede">Slimy est un compagnon de gel translucide posé sur votre bureau. Il suit votre souris, retient ce que vous lui dites, parle avec une voix locale et demande avant de faire quoi que ce soit.</p>
-      <div class="actions">
-        <a class="btn" href="#install">Installer sous Linux</a>
-        <a class="btn ghost" href="https://github.com/Okymi-X/slimy">Voir sur GitHub</a>
-      </div>
-      <ul class="facts">
-        <li>Licence MIT</li>
-        <li>Rust et Tauri</li>
-        <li>Sans compte, sans traqueur</li>
-      </ul>
+<section class="hero wrap" aria-labelledby="h-hero">
+  <div class="hero-text">
+    <p class="eyebrow">Compagnon de bureau libre</p>
+    <h1 id="h-hero">UN SLIME QUI VIT SUR <span class="acc">VOTRE ÉCRAN.</span></h1>
+    <p class="lede">Slimy est un compagnon de gel translucide posé sur votre bureau. Il suit votre souris, retient ce que vous lui dites, parle avec une voix locale et demande avant de faire quoi que ce soit.</p>
+    <div class="actions">
+      <a class="btn primary" href="#install">Installer sous Linux</a>
+      <a class="btn ghost" href="https://github.com/Okymi-X/slimy">Voir sur GitHub</a>
     </div>
-    <figure class="screen gel">
-      <div class="pane">
-        <picture>
-          <source data-still media="(prefers-reduced-motion: reduce)" srcset="/assets/hero-poster.webp" type="image/webp">
-          <img src="/assets/hero.gif" width="480" height="320" fetchpriority="high" alt="Un slime de gel bleu posé en bas d'un écran sombre, qui respire lentement, cligne des yeux et sourit.">
-        </picture>
-      </div>
-      <figcaption>La vraie surcouche, enregistrée sur un bureau sombre.</figcaption>
-    </figure>
+    <ul class="facts"><li>Licence MIT</li><li>Rust et Tauri</li><li>Sans compte, sans traqueur</li></ul>
+  </div>
+  <figure class="card hero-card">
+    <div class="pane"><picture><source data-still media="(prefers-reduced-motion: reduce)" srcset="/assets/hero-poster.webp" type="image/webp"><img src="/assets/hero.gif" width="480" height="320" fetchpriority="high" alt="Un slime de gel bleu posé en bas d'un écran sombre, qui respire lentement, cligne des yeux et sourit."></picture></div>
+    <figcaption>La vraie surcouche, enregistrée sur un bureau sombre.</figcaption>
+    <svg class="tile" viewBox="0 0 48 48" width="64" height="64" aria-hidden="true" focusable="false"><rect width="48" height="48" rx="12" fill="#ecebf5"/><path d="M8 36c0-10 6-19 16-19s16 9 16 19c0 1.3-.9 2-2 2H10c-1.1 0-2-.7-2-2z" fill="#4a9bf0"/><path d="M13 30c1.3-4.5 4.5-7.5 9-8" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="19" cy="31" rx="2" ry="2.7" fill="#142040"/><ellipse cx="29" cy="31" rx="2" ry="2.7" fill="#142040"/><path d="M21.5 35.5c1.6 1.2 3.4 1.2 5 0" fill="none" stroke="#142040" stroke-width="1.4" stroke-linecap="round"/></svg>
+  </figure>
+</section>
+
+<section id="what" class="wrap sec" aria-labelledby="h-what">
+  <header class="sh"><h2 id="h-what">CE QU'IL FAIT</h2><p>Un petit corps au-dessus de vos fenêtres, cinq habitudes.</p></header>
+  <ul class="list">
+    <li class="row"><svg class="ico" viewBox="0 0 48 48" width="56" height="56" role="presentation" aria-hidden="true" focusable="false"><rect width="48" height="48" rx="11" fill="#ecebf5"/><path d="M8 36c0-10 6-19 16-19s16 9 16 19c0 1.3-.9 2-2 2H10c-1.1 0-2-.7-2-2z" fill="#4ec9b0"/><path d="M13 30c1.3-4.5 4.5-7.5 9-8" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="19" cy="31" rx="2" ry="2.7" fill="#0f2e29"/><ellipse cx="29" cy="31" rx="2" ry="2.7" fill="#0f2e29"/><path d="M21.5 35.5c1.6 1.2 3.4 1.2 5 0" fill="none" stroke="#0f2e29" stroke-width="1.4" stroke-linecap="round"/></svg><div class="row-body"><h3>Vit sur votre écran</h3><p class="sub">corps mou, physique</p><p>Un corps mou simulé. Il roule le long des bords de fenêtre, s'écrase quand on le lâche, tend un bras vers votre curseur et s'endort quand rien ne se passe.</p><ul class="tags"><li>Corps mou</li><li>WebGL2</li></ul></div></li>
+    <li class="row"><svg class="ico" viewBox="0 0 48 48" width="56" height="56" role="presentation" aria-hidden="true" focusable="false"><rect width="48" height="48" rx="11" fill="#ecebf5"/><path d="M8 36c0-10 6-19 16-19s16 9 16 19c0 1.3-.9 2-2 2H10c-1.1 0-2-.7-2-2z" fill="#7d7af7"/><path d="M13 30c1.3-4.5 4.5-7.5 9-8" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="19" cy="31" rx="2" ry="2.7" fill="#1c1b3d"/><ellipse cx="29" cy="31" rx="2" ry="2.7" fill="#1c1b3d"/><path d="M21.5 35.5c1.6 1.2 3.4 1.2 5 0" fill="none" stroke="#1c1b3d" stroke-width="1.4" stroke-linecap="round"/></svg><div class="row-body"><h3>Se souvient et rappelle</h3><p class="sub">mémoire locale</p><p>Dites-lui un fait ou une échéance. Il la garde dans un fichier local et vous la rend dans un court point du matin.</p><ul class="tags"><li>Fichier local</li><li>Point du matin</li></ul></div></li>
+    <li class="row"><svg class="ico" viewBox="0 0 48 48" width="56" height="56" role="presentation" aria-hidden="true" focusable="false"><rect width="48" height="48" rx="11" fill="#ecebf5"/><path d="M8 36c0-10 6-19 16-19s16 9 16 19c0 1.3-.9 2-2 2H10c-1.1 0-2-.7-2-2z" fill="#d7ba7d"/><path d="M13 30c1.3-4.5 4.5-7.5 9-8" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="19" cy="31" rx="2" ry="2.7" fill="#3a2d0e"/><ellipse cx="29" cy="31" rx="2" ry="2.7" fill="#3a2d0e"/><path d="M21.5 35.5c1.6 1.2 3.4 1.2 5 0" fill="none" stroke="#3a2d0e" stroke-width="1.4" stroke-linecap="round"/></svg><div class="row-body"><h3>Parle et écoute en local</h3><p class="sub">voix sur la machine</p><p>La reconnaissance vocale avec Whisper et la synthèse de voix tournent sur votre machine. Aucun son n'est envoyé à un serveur.</p><ul class="tags"><li>Whisper</li><li>Kokoro</li></ul></div></li>
+    <li class="row"><svg class="ico" viewBox="0 0 48 48" width="56" height="56" role="presentation" aria-hidden="true" focusable="false"><rect width="48" height="48" rx="11" fill="#ecebf5"/><path d="M8 36c0-10 6-19 16-19s16 9 16 19c0 1.3-.9 2-2 2H10c-1.1 0-2-.7-2-2z" fill="#8fe3b0"/><path d="M13 30c1.3-4.5 4.5-7.5 9-8" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="19" cy="31" rx="2" ry="2.7" fill="#10301c"/><ellipse cx="29" cy="31" rx="2" ry="2.7" fill="#10301c"/><path d="M21.5 35.5c1.6 1.2 3.4 1.2 5 0" fill="none" stroke="#10301c" stroke-width="1.4" stroke-linecap="round"/></svg><div class="row-body"><h3>Évolue pendant la nuit</h3><p class="sub">génome quotidien</p><p>Chaque nuit, un génome de traits du corps et de la matière bouge un peu, selon ce que la journée a contenu. Les changements sont bornés et consignés.</p><ul class="tags"><li>Génome</li><li>Borné</li></ul></div></li>
+    <li class="row"><svg class="ico" viewBox="0 0 48 48" width="56" height="56" role="presentation" aria-hidden="true" focusable="false"><rect width="48" height="48" rx="11" fill="#ecebf5"/><path d="M8 36c0-10 6-19 16-19s16 9 16 19c0 1.3-.9 2-2 2H10c-1.1 0-2-.7-2-2z" fill="#f08aa6"/><path d="M13 30c1.3-4.5 4.5-7.5 9-8" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="19" cy="31" rx="2" ry="2.7" fill="#3d1020"/><ellipse cx="29" cy="31" rx="2" ry="2.7" fill="#3d1020"/><path d="M21.5 35.5c1.6 1.2 3.4 1.2 5 0" fill="none" stroke="#3d1020" stroke-width="1.4" stroke-linecap="round"/></svg><div class="row-body"><h3>Demande avant chaque action</h3><p class="sub">accord d'abord</p><p>Voir l'écran, le presse-papiers, les fichiers, les outils, le pointeur et le micro sont refusés tant que vous ne les accordez pas.</p><ul class="tags"><li>Sur accord</li><li>Journalisé</li></ul></div></li>
+  </ul>
+</section>
+
+<section id="see" class="wrap sec" aria-labelledby="h-see">
+  <header class="sh"><h2 id="h-see">LE VOIR</h2><p>Captures réelles de l'application.</p></header>
+  <div class="gallery">
+    <figure class="card g-forms"><div class="pane"><img src="/assets/forms.webp" width="1440" height="480" loading="lazy" decoding="async" alt="Six slimes sur un fond sombre rayé : dômes vert, orange et violet en haut ; deux formes de baleine, bleue et violette, et un dôme orange avec des oreilles à feuille et des ailes de fée en bas."></div><figcaption>Formes et couleurs que le corps peut prendre. Une planche dessinée par le moteur de rendu de l'application.</figcaption></figure>
+    <figure class="card g-chat"><div class="pane"><picture><source data-still media="(prefers-reduced-motion: reduce)" srcset="/assets/chat-poster.webp" type="image/webp"><img src="/assets/chat.gif" width="480" height="252" loading="lazy" decoding="async" alt="Une bulle au-dessus du slime contient une réponse et un champ de saisie avec un micro et un bouton Envoyer (Send)."></picture></div><figcaption>Discussion. Écrivez ou parlez au micro, la réponse apparaît au-dessus de sa tête. Interface en anglais pour l'instant.</figcaption></figure>
+    <figure class="card g-birth"><div class="pane"><picture><source data-still media="(prefers-reduced-motion: reduce)" srcset="/assets/birth-poster.webp" type="image/webp"><img src="/assets/birth.gif" width="560" height="218" loading="lazy" decoding="async" alt="Un slime tout juste éclos salue l'utilisateur dans une bulle : Good morning, je me souviens d'une chose sur vous."></picture></div><figcaption>Naissance. Au premier lancement il éclot, puis vous salue. Texte d'exemple issu d'une âme de test.</figcaption></figure>
   </div>
 </section>
 
-<section id="what" aria-labelledby="h-what">
-  <div class="wrap split">
-    <header>
-      <h2 id="h-what">Ce qu'il fait</h2>
-      <p>Un petit corps au-dessus de vos fenêtres, cinq habitudes.</p>
-    </header>
-    <ul class="rows">
-      <li><h3>Vit sur votre écran</h3><p>Un corps mou simulé. Il roule le long des bords de fenêtre, s'écrase quand on le lâche, tend un bras vers votre curseur et s'endort quand rien ne se passe.</p></li>
-      <li><h3>Se souvient et rappelle</h3><p>Dites-lui un fait ou une échéance. Il la garde dans une base locale et vous la rend dans un court point du matin.</p></li>
-      <li><h3>Parle et écoute en local</h3><p>La reconnaissance vocale avec Whisper et la synthèse de voix tournent sur votre machine. Aucun son n'est envoyé à un serveur.</p></li>
-      <li><h3>Évolue pendant la nuit</h3><p>Chaque nuit, un génome de traits du corps et de la matière bouge un peu, selon ce que la journée a contenu. Les changements sont bornés et consignés.</p></li>
-      <li><h3>Demande avant chaque action</h3><p>Voir l'écran, le presse-papiers, les fichiers, les outils, le pointeur et le micro sont refusés tant que vous ne les accordez pas.</p></li>
-    </ul>
-  </div>
+<section id="privacy" class="wrap sec" aria-labelledby="h-privacy">
+  <header class="sh"><h2 id="h-privacy">VIE PRIVÉE ET CONTRÔLE</h2><p>Chaque pouvoir démarre éteint.</p></header>
+  <dl class="table">
+    <div><dt>Refusé par défaut</dt><dd>Chaque pouvoir démarre éteint. Rien ne tourne avant votre accord.</dd></div>
+    <div><dt>Limité dans le temps</dt><dd>Un accord dure 5, 15 ou 60 minutes. Vous pouvez le retirer à tout moment.</dd></div>
+    <div><dt>Journalisé</dt><dd>Ce qu'il a fait est écrit dans un journal que vous pouvez lire.</dd></div>
+    <div><dt>Clés dans votre trousseau</dt><dd>Les clés d'API vont dans le trousseau du système, jamais dans un fichier.</dd></div>
+  </dl>
+  <h3 class="sub-h">Ce qui quitte votre machine</h3>
+  <dl class="table">
+    <div><dt>Toujours</dt><dd>Le texte de la discussion, vers le fournisseur que vous avez choisi.</dd></div>
+    <div><dt>Avec accord</dt><dd>Une capture d'écran, vers le même fournisseur, quand vous lui demandez de regarder.</dd></div>
+    <div><dt>Jamais</dt><dd>L'audio de la voix et la base de souvenirs restent sur la machine. Avec Ollama, la discussion reste locale aussi.</dd></div>
+  </dl>
 </section>
 
-<section id="gallery" aria-labelledby="h-gallery">
-  <div class="wrap">
-    <h2 id="h-gallery">Le voir</h2>
-    <div class="gallery">
-      <figure class="shot gel g-forms">
-        <div class="pane"><img src="/assets/forms.png" width="1440" height="480" loading="lazy" alt="Six slimes sur un fond sombre rayé : dômes vert, orange et violet en haut ; deux formes de baleine, bleue et violette, et un dôme orange avec des oreilles à feuille et des ailes de fée en bas."></div>
-        <figcaption>Formes et couleurs que le corps peut prendre. Une planche dessinée par le moteur de rendu de l'application.</figcaption>
-      </figure>
-      <figure class="shot gel g-chat">
-        <div class="pane"><picture>
-          <source data-still media="(prefers-reduced-motion: reduce)" srcset="/assets/chat-poster.webp" type="image/webp">
-          <img src="/assets/chat.gif" width="480" height="252" loading="lazy" alt="Une bulle au-dessus du slime contient une réponse et un champ de saisie avec un micro et un bouton Envoyer (Send).">
-        </picture></div>
-        <figcaption>Discussion. Écrivez ou parlez au micro, la réponse apparaît au-dessus de sa tête. Interface en anglais pour l'instant.</figcaption>
-      </figure>
-      <figure class="shot gel g-birth">
-        <div class="pane"><picture>
-          <source data-still media="(prefers-reduced-motion: reduce)" srcset="/assets/birth-poster.webp" type="image/webp">
-          <img src="/assets/birth.gif" width="560" height="218" loading="lazy" alt="Un slime tout juste éclos salue l'utilisateur dans une bulle : Good morning, je me souviens d'une chose sur vous.">
-        </picture></div>
-        <figcaption>Naissance. Au premier lancement il éclot, puis vous salue. Texte d'exemple issu d'une âme de test.</figcaption>
-      </figure>
-    </div>
-  </div>
-</section>
-
-<section id="privacy" class="privacy" aria-labelledby="h-privacy">
-  <div class="wrap">
-    <div class="gel">
-      <div>
-        <h2 id="h-privacy">Vie privée et contrôle</h2>
-        <ul>
-          <li><strong>Refusé par défaut.</strong> Chaque pouvoir démarre éteint. Rien ne tourne avant votre accord.</li>
-          <li><strong>Limité dans le temps.</strong> Un accord dure 5, 15 ou 60 minutes. Vous pouvez le retirer à tout moment.</li>
-          <li><strong>Journalisé.</strong> Ce qu'il a fait est écrit dans un journal que vous pouvez lire.</li>
-          <li><strong>Clés dans votre trousseau.</strong> Les clés d'API vont dans le trousseau du système, jamais dans un fichier.</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Ce qui quitte votre machine</h3>
-        <dl class="leaves">
-          <div><dt>Toujours</dt><dd>Le texte de la discussion, vers le fournisseur que vous avez choisi.</dd></div>
-          <div><dt>Avec accord</dt><dd>Une capture d'écran, vers le même fournisseur, quand vous lui demandez de regarder.</dd></div>
-          <div><dt>Jamais</dt><dd>L'audio de la voix et la base de souvenirs restent sur la machine. Avec Ollama, la discussion reste locale aussi.</dd></div>
-        </dl>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="install" aria-labelledby="h-install">
-  <div class="wrap split">
-    <header>
-      <h2 id="h-install">Installer</h2>
-      <p>Linux d'abord. Il n'y a pas encore d'installeur : on compile depuis les sources. Des fichiers prêts à l'emploi viendront sur la <a href="https://github.com/Okymi-X/slimy/releases">page des versions</a>.</p>
-    </header>
-    <div class="steps">
-      <div>
-        <p class="label">1. Paquets système (noms Fedora)</p>
-        <div class="codewrap">
-          <pre id="c1"><code>sudo dnf install webkit2gtk4.1-devel libsoup3-devel librsvg2-devel \
-  openssl-devel libappindicator-gtk3-devel libxdo-devel</code></pre>
-          <button class="chip" type="button" data-copy="c1" data-done="Copié">Copier</button>
-        </div>
-        <p style="margin-top:8px;font-size:.9375rem;color:var(--ink-soft)">Sur une autre distribution, installez les mêmes bibliothèques sous leurs noms. Il faut aussi une chaîne Rust.</p>
-      </div>
-      <div>
-        <p class="label">2. Compiler et lancer</p>
-        <div class="codewrap">
-          <pre id="c2"><code>git clone https://github.com/Okymi-X/slimy.git
+<section id="install" class="wrap sec" aria-labelledby="h-install">
+  <header class="sh"><h2 id="h-install">INSTALLER</h2><p>Linux d'abord. Il n'y a pas encore d'installeur : on compile depuis les sources. Des fichiers prêts à l'emploi viendront sur la <a href="https://github.com/Okymi-X/slimy/releases">page des versions</a>.</p></header>
+  <div class="steps">
+    <div><p class="label">1. Paquets système (noms Fedora)</p>
+      <div class="codewrap"><pre id="c1" tabindex="0"><code>sudo dnf install webkit2gtk4.1-devel libsoup3-devel librsvg2-devel \
+  openssl-devel libappindicator-gtk3-devel libxdo-devel</code></pre><button class="btn tiny ghost" type="button" data-copy="c1" data-done="Copié">Copier</button></div>
+      <p class="note">Sur une autre distribution, installez les mêmes bibliothèques sous leurs noms. Il faut aussi une chaîne Rust.</p></div>
+    <div><p class="label">2. Compiler et lancer</p>
+      <div class="codewrap"><pre id="c2" tabindex="0"><code>git clone https://github.com/Okymi-X/slimy.git
 cd slimy
 rustup target add wasm32-unknown-unknown
 cargo install wasm-bindgen-cli
 ./scripts/build-web.sh
 cargo build -p slimy-desktop --features custom-protocol --release
-target/release/slimy-desktop</code></pre>
-          <button class="chip" type="button" data-copy="c2" data-done="Copié">Copier</button>
-        </div>
-      </div>
-      <div class="platforms">
-        <div><h3>Linux <span class="tag">testé</span></h3><p>Compilé et lancé sur Fedora avec GNOME. Il passe par XWayland.</p></div>
-        <div><h3>Windows <span class="tag">non testé</span></h3><p>Le code propre à la plateforme existe mais n'a jamais été compilé ni lancé. Commencez par <code>cargo check</code>.</p></div>
-        <div><h3>macOS <span class="tag">non testé</span></h3><p>Même état que Windows. Retours et correctifs bienvenus.</p></div>
-      </div>
-    </div>
+target/release/slimy-desktop</code></pre><button class="btn tiny ghost" type="button" data-copy="c2" data-done="Copié">Copier</button></div></div>
+    <ul class="platforms">
+      <li><h3>Linux <span class="chipstat ok">testé</span></h3><p>Compilé et lancé sur Fedora avec GNOME. Il passe par XWayland.</p></li>
+      <li><h3>Windows <span class="chipstat warn">non testé</span></h3><p>Le code propre à la plateforme existe mais n'a jamais été compilé ni lancé. Commencez par <code>cargo check</code>.</p></li>
+      <li><h3>macOS <span class="chipstat warn">non testé</span></h3><p>Même état que Windows. Retours et correctifs bienvenus.</p></li>
+    </ul>
   </div>
 </section>
 
-<section id="source" class="os" aria-labelledby="h-os">
-  <div class="wrap">
-    <h2 id="h-os">Libre</h2>
-    <div>
-      <p>Slimy est publié sous licence MIT. Lisez-le, modifiez-le, distribuez le vôtre.</p>
-      <p>La voix française est facultative, derrière la fonction <code>french-voice</code>. Elle utilise espeak-ng, sous GPL-3 : une compilation avec cette fonction est donc couverte par la GPL. Une compilation par défaut ne l'est pas.</p>
-      <div class="links">
-        <a class="btn" href="https://github.com/Okymi-X/slimy">Sources sur GitHub</a>
-        <a class="btn ghost" href="https://github.com/Okymi-X/slimy/issues">Signaler un problème</a>
-        <a class="btn ghost" href="https://github.com/Okymi-X/slimy/releases">Versions</a>
-      </div>
+<section id="source" class="wrap sec" aria-labelledby="h-os">
+  <header class="sh"><h2 id="h-os">LIBRE</h2></header>
+  <div class="os">
+    <p>Slimy est publié sous licence MIT. Lisez-le, modifiez-le, distribuez le vôtre.</p>
+    <p>La voix française est facultative, derrière la fonction <code>french-voice</code>. Elle utilise espeak-ng, sous GPL-3 : une compilation avec cette fonction est donc couverte par la GPL. Une compilation par défaut ne l'est pas.</p>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/Okymi-X/slimy">Sources sur GitHub</a>
+      <a class="btn ghost" href="https://github.com/Okymi-X/slimy/issues">Signaler un problème</a>
+      <a class="btn ghost" href="https://github.com/Okymi-X/slimy/releases">Versions</a>
     </div>
   </div>
 </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <p>Slimy est sous licence MIT. Ce site ne dépose aucun cookie et charge une police depuis Google Fonts.</p>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p>Slimy est sous licence MIT. Ce site ne dépose aucun cookie et charge des polices depuis Google Fonts.</p>
     <nav aria-label="Pied de page">
       <a href="https://github.com/Okymi-X/slimy">GitHub</a>
       <a href="https://github.com/Okymi-X/slimy/issues">Issues</a>

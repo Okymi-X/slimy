@@ -1,16 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#9fd2ff"/>
-      <stop offset="0.55" stop-color="#4a9bf0"/>
-      <stop offset="1" stop-color="#2b6fd6"/>
-    </linearGradient>
-  </defs>
-  <path d="M6 50c0-17 10.500-30 26-30s26 13 26 30c0 2-1.500 3-3.500 3h-45C7.500 53 6 52 6 50z" fill="url(#g)"/>
-  <path d="M14 38c2-8 8-13 15-14" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="24" cy="42" rx="3" ry="4" fill="#142040"/>
-  <ellipse cx="40" cy="42" rx="3" ry="4" fill="#142040"/>
-  <circle cx="25" cy="40.500" r="1" fill="#fff"/>
-  <circle cx="41" cy="40.500" r="1" fill="#fff"/>
-  <path d="M28 48c2.500 2 5.500 2 8 0" fill="none" stroke="#142040" stroke-width="1.800" stroke-linecap="round"/>
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fd2ff"/><stop offset=".55" stop-color="#4a9bf0"/><stop offset="1" stop-color="#2b6fd6"/></linearGradient></defs>
+  <rect width="64" height="64" rx="14" fill="#1e1e1e"/>
+  <rect x=".5" y=".5" width="63" height="63" rx="13.5" fill="none" stroke="#3a3a3a"/>
+  <path d="M10 50c0-14 8.5-24 22-24s22 10 22 24c0 1.8-1.3 2.8-3 2.8H13c-1.7 0-3-1-3-2.8z" fill="url(#g)"/>
+  <path d="M16 42c1.8-6 6-10 12-11" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2.6" stroke-linecap="round"/>
+  <ellipse cx="25" cy="44" rx="2.6" ry="3.4" fill="#142040"/>
+  <ellipse cx="39" cy="44" rx="2.6" ry="3.4" fill="#142040"/>
+  <path d="M28.5 49c2.2 1.8 4.8 1.8 7 0" fill="none" stroke="#142040" stroke-width="1.6" stroke-linecap="round"/>
 </svg>

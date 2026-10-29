@@ -36,8 +36,9 @@ import { launch, sleep } from './cdp.mjs';
 
   await ev(`document.querySelector('#settings .panel-buttons button:last-of-type')?.click()`);
   await ev(`window.__due = [{ text: 'drink water' }]`);
-  await sleep(24000);
-  check('a due reminder is announced in the bubble', await ev(`/drink water/.test(document.querySelector('#bubble')?.textContent ?? '')`));
+  let announced = false;
+  for (let i = 0; i < 40 && !announced; i++) { await sleep(1500); announced = await ev(`/drink water/.test(document.querySelector('#bubble')?.textContent ?? '')`); }
+  check('a due reminder is announced in the bubble', announced);
   await page.shot('reminder');
   const errors = await page.errors();
   check('no page errors', errors.length === 0);

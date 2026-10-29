@@ -1,30 +1,8 @@
-// Theme, still images and copy buttons. Everything degrades to the plain page without this file.
+// Still images and copy buttons. Everything degrades to the plain page without this file.
 (function () {
   var root = document.documentElement;
   function store(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
   function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-
-  // Theme
-  var themeBtn = document.getElementById('theme');
-  function isDark() {
-    var t = root.getAttribute('data-theme');
-    if (t) return t === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  }
-  function paintTheme() {
-    if (!themeBtn) return;
-    themeBtn.setAttribute('aria-label', isDark() ? themeBtn.dataset.toLight : themeBtn.dataset.toDark);
-  }
-  if (themeBtn) {
-    paintTheme();
-    themeBtn.addEventListener('click', function () {
-      var next = isDark() ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      store('slimy-theme', next);
-      paintTheme();
-    });
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintTheme);
-  }
 
   // Still images: swap each animated picture to its poster.
   var motionBtn = document.getElementById('motion');
