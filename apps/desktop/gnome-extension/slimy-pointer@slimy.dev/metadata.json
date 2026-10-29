@@ -1,0 +1,7 @@
+{
+  "uuid": "slimy-pointer@slimy.dev",
+  "name": "Slimy pointer bridge",
+  "description": "Lets the Slimy companion read the mouse position, which Wayland hides from ordinary applications. Exposes two read-only D-Bus methods on the session bus: GetPosition and GetActiveApp (the focused window class only).",
+  "shell-version": ["45", "46", "47", "48", "49", "50"],
+  "version": 2
+}

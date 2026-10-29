@@ -1,0 +1,50 @@
+[package]
+name = "slimy-desktop"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+slimy-core = { path = "../../../crates/slimy-core" }
+slimy-brain = { path = "../../../crates/slimy-brain" }
+slimy-perms = { path = "../../../crates/slimy-perms" }
+slimy-mcp = { path = "../../../crates/slimy-mcp" }
+oo7 = "0.6.0"
+reqwest = { version = "0.13.5", default-features = false, features = ["json", "rustls"] }
+serde_json = "1.0.154"
+xcap = "0.9"
+image = { version = "0.25", default-features = false, features = ["jpeg"] }
+base64 = "0.22"
+sherpa-onnx = "2"
+espeak-rs = { version = "0.2", optional = true }
+cpal = "0.15"
+rodio = { version = "0.20", default-features = false }
+bzip2 = "0.5"
+tar = "0.4"
+slimy-voice = { path = "../../../crates/slimy-voice" }
+slimy-learn = { path = "../../../crates/slimy-learn" }
+slimy-display = { path = "../../../crates/slimy-display" }
+slimy-remind = { path = "../../../crates/slimy-remind" }
+slimy-skills = { path = "../../../crates/slimy-skills" }
+arboard = { version = "3", default-features = false, features = ["wayland-data-control"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+gtk = "0.18"
+ashpd = { version = "0.13", default-features = false, features = ["tokio", "remote_desktop", "screencast", "screenshot"] }
+tokio = { version = "1", features = ["time"] }
+
+[target.'cfg(any(target_os = "windows", target_os = "macos"))'.dependencies]
+enigo = "0.6"
+active-win-pos-rs = "0.9"
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+# French phonemes through espeak-ng (GPL-3): off by default so the default binary holds no GPL code.
+french-voice = ["dep:espeak-rs"]

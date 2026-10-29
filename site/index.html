@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slimy, a gel slime that lives on your screen</title>
+<meta name="description" content="Slimy is an open source desktop pet: a translucent gel slime that reacts to your mouse, remembers things, talks locally and asks before every action.">
+<link rel="canonical" href="https://slimy.okymi.org/">
+<link rel="alternate" hreflang="en" href="https://slimy.okymi.org/">
+<link rel="alternate" hreflang="fr" href="https://slimy.okymi.org/fr/">
+<link rel="alternate" hreflang="x-default" href="https://slimy.okymi.org/">
+<meta name="theme-color" content="#1b2236">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Slimy">
+<meta property="og:title" content="Slimy, a gel slime that lives on your screen">
+<meta property="og:description" content="An open source desktop pet that reacts to your mouse, remembers things, talks locally and asks before every action.">
+<meta property="og:url" content="https://slimy.okymi.org/">
+<meta property="og:image" content="https://slimy.okymi.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A translucent blue gel slime with a small smile, next to the word Slimy.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Slimy, a gel slime that lives on your screen">
+<meta name="twitter:description" content="An open source desktop pet that reacts to your mouse, remembers things, talks locally and asks before every action.">
+<meta name="twitter:image" content="https://slimy.okymi.org/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..700,100&amp;display=swap">
+<link rel="stylesheet" href="/style.css">
+<script>try{var t=localStorage.getItem('slimy-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Slimy","applicationCategory":"DesktopEnhancementApplication","operatingSystem":"Linux","license":"https://opensource.org/license/mit","url":"https://slimy.okymi.org/","codeRepository":"https://github.com/Okymi-X/slimy"}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/"><img src="/favicon.svg" alt="" width="32" height="32">Slimy</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#what">What it does</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#install">Install</a>
+      <a href="#source">Open source</a>
+    </nav>
+    <div class="tools">
+      <a class="chip" href="/fr/" hreflang="fr" lang="fr" aria-label="Lire en français">FR</a>
+      <button class="chip" id="motion" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5v14M15 5v14"/></svg><span class="txt">&nbsp;Still images</span></button>
+      <button class="chip" id="theme" type="button" aria-label="Switch to dark theme" data-to-dark="Switch to dark theme" data-to-light="Switch to light theme"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4v16" /></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero" aria-labelledby="h-hero">
+  <div class="wrap">
+    <div>
+      <h1 id="h-hero">A slime that lives on your screen.</h1>
+      <p class="lede">Slimy is a translucent gel pet on your desktop. It follows your mouse, remembers what you tell it, talks with a local voice, and asks before it does anything.</p>
+      <div class="actions">
+        <a class="btn" href="#install">Install on Linux</a>
+        <a class="btn ghost" href="https://github.com/Okymi-X/slimy">View on GitHub</a>
+      </div>
+      <ul class="facts">
+        <li>MIT licence</li>
+        <li>Rust and Tauri</li>
+        <li>No account, no tracker</li>
+      </ul>
+    </div>
+    <figure class="screen gel">
+      <div class="pane">
+        <picture>
+          <source data-still media="(prefers-reduced-motion: reduce)" srcset="/assets/hero-poster.webp" type="image/webp">
+          <img src="/assets/hero.gif" width="480" height="320" fetchpriority="high" alt="A blue gel slime resting at the bottom of a dark screen, breathing slowly, blinking and smiling.">
+        </picture>
+      </div>
+      <figcaption>The real overlay, recorded on a dark desktop.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="what" aria-labelledby="h-what">
+  <div class="wrap split">
+    <header>
+      <h2 id="h-what">What it does</h2>
+      <p>One small body on top of your windows, five habits.</p>
+    </header>
+    <ul class="rows">
+      <li><h3>Lives on your screen</h3><p>Soft body physics. It rolls along window edges, squashes when you drop it, reaches toward your cursor and falls asleep when nothing happens.</p></li>
+      <li><h3>Remembers and reminds</h3><p>Tell it a fact or a deadline. It keeps it in a local database and gives it back in a short morning briefing.</p></li>
+      <li><h3>Talks and listens locally</h3><p>Speech to text with Whisper and speech synthesis both run on your machine. No audio is sent to a server.</p></li>
+      <li><h3>Evolves overnight</h3><p>Each night a genome of body and material traits shifts a little, based on what the day held. Changes are bounded and recorded.</p></li>
+      <li><h3>Asks before every action</h3><p>Seeing the screen, the clipboard, files, tools, the pointer and the microphone are each refused until you grant them.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section id="gallery" aria-labelledby="h-gallery">
+  <div class="wrap">
+    <h2 id="h-gallery">See it</h2>
+    <div class="gallery">
+      <figure class="shot gel g-forms">
+        <div class="pane"><img src="/assets/forms.png" width="1440" height="480" loading="lazy" alt="Six slimes on a dark striped background: green, orange and purple domes on top; a blue and a purple whale shape and an orange dome with leaf ears and fairy wings below."></div>
+        <figcaption>Forms and colours the body can take. A sheet drawn by the app's own renderer.</figcaption>
+      </figure>
+      <figure class="shot gel g-chat">
+        <div class="pane"><picture>
+          <source data-still media="(prefers-reduced-motion: reduce)" srcset="/assets/chat-poster.webp" type="image/webp">
+          <img src="/assets/chat.gif" width="480" height="252" loading="lazy" alt="A speech bubble above the slime holds a reply and a text field with a microphone and Send button.">
+        </picture></div>
+        <figcaption>Chat. Type or use the microphone, and the answer appears above its head.</figcaption>
+      </figure>
+      <figure class="shot gel g-birth">
+        <div class="pane"><picture>
+          <source data-still media="(prefers-reduced-motion: reduce)" srcset="/assets/birth-poster.webp" type="image/webp">
+          <img src="/assets/birth.gif" width="560" height="218" loading="lazy" alt="A slime that has just hatched greets the user in a speech bubble: Good morning, I remember one thing about you.">
+        </picture></div>
+        <figcaption>Birth. On first launch it hatches, then greets you. Sample text from a test soul.</figcaption>
+      </figure>
+      <figure class="shot gel g-powers crop">
+        <div class="pane"><img src="/assets/powers.png" width="860" height="2560" loading="lazy" alt="The Powers panel: see the active application, read the clipboard, see the screen, read files, use tools, move the pointer and listen through the microphone, each with 5, 15 or 60 minute buttons or Grant."></div>
+        <figcaption>Powers panel, top of the list. Each power is granted for 5, 15 or 60 minutes, or not at all.</figcaption>
+      </figure>
+      <figure class="shot gel g-brain crop">
+        <div class="pane"><img src="/assets/brain.png" width="860" height="1160" loading="lazy" alt="The Brain panel: provider set to Groq, a model name, an optional address, a backup provider, an API key field and Save, Test, Forget the key and Close buttons."></div>
+        <figcaption>Brain panel. Pick a provider and a model, add a backup if you want one.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="privacy" class="privacy" aria-labelledby="h-privacy">
+  <div class="wrap">
+    <div class="gel">
+      <div>
+        <h2 id="h-privacy">Privacy and control</h2>
+        <ul>
+          <li><strong>Refused by default.</strong> Every power starts off. Nothing runs until you say so.</li>
+          <li><strong>Time limited.</strong> A grant lasts 5, 15 or 60 minutes. You can take it back at any moment.</li>
+          <li><strong>Journaled.</strong> What it did is written to a journal you can read.</li>
+          <li><strong>Keys stay in your keyring.</strong> API keys go to the system keyring, never to a file.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>What leaves your machine</h3>
+        <dl class="leaves">
+          <div><dt>Always</dt><dd>The chat text you send, to the provider you chose.</dd></div>
+          <div><dt>With consent</dt><dd>One screenshot, to the same provider, when you ask it to look.</dd></div>
+          <div><dt>Never</dt><dd>Voice audio and the memory database stay on the machine. Pick Ollama and the chat stays local too.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="install" aria-labelledby="h-install">
+  <div class="wrap split">
+    <header>
+      <h2 id="h-install">Install</h2>
+      <p>Linux first. There is no installer yet, so you build it from source. Prebuilt files will appear on the <a href="https://github.com/Okymi-X/slimy/releases">releases page</a>.</p>
+    </header>
+    <div class="steps">
+      <div>
+        <p class="label">1. System packages (Fedora names)</p>
+        <div class="codewrap">
+          <pre id="c1"><code>sudo dnf install webkit2gtk4.1-devel libsoup3-devel librsvg2-devel \
+  openssl-devel libappindicator-gtk3-devel libxdo-devel</code></pre>
+          <button class="chip" type="button" data-copy="c1" data-done="Copied">Copy</button>
+        </div>
+        <p style="margin-top:8px;font-size:.9375rem;color:var(--ink-soft)">On other distributions, install the same libraries under their own names. You also need a Rust toolchain.</p>
+      </div>
+      <div>
+        <p class="label">2. Build and run</p>
+        <div class="codewrap">
+          <pre id="c2"><code>git clone https://github.com/Okymi-X/slimy.git
+cd slimy
+rustup target add wasm32-unknown-unknown
+cargo install wasm-bindgen-cli
+./scripts/build-web.sh
+cargo build -p slimy-desktop --features custom-protocol --release
+target/release/slimy-desktop</code></pre>
+          <button class="chip" type="button" data-copy="c2" data-done="Copied">Copy</button>
+        </div>
+      </div>
+      <div class="platforms">
+        <div><h3>Linux <span class="tag">tested</span></h3><p>Built and run on Fedora with GNOME. It runs through XWayland there.</p></div>
+        <div><h3>Windows <span class="tag">untested</span></h3><p>The platform code exists but has never been built or run. Start with <code>cargo check</code>.</p></div>
+        <div><h3>macOS <span class="tag">untested</span></h3><p>Same state as Windows. Reports and fixes are welcome.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="source" class="os" aria-labelledby="h-os">
+  <div class="wrap">
+    <h2 id="h-os">Open source</h2>
+    <div>
+      <p>Slimy is released under the MIT licence. Read it, change it, ship your own.</p>
+      <p>The French voice is optional and lives behind the <code>french-voice</code> feature. It uses espeak-ng, which is GPL-3, so a build with that feature on is covered by the GPL. A default build is not.</p>
+      <div class="links">
+        <a class="btn" href="https://github.com/Okymi-X/slimy">Source on GitHub</a>
+        <a class="btn ghost" href="https://github.com/Okymi-X/slimy/issues">Report an issue</a>
+        <a class="btn ghost" href="https://github.com/Okymi-X/slimy/releases">Releases</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Slimy is MIT licensed. This site sets no cookies and loads one font from Google Fonts.</p>
+    <nav aria-label="Footer">
+      <a href="https://github.com/Okymi-X/slimy">GitHub</a>
+      <a href="https://github.com/Okymi-X/slimy/issues">Issues</a>
+      <a href="/fr/" hreflang="fr" lang="fr">Français</a>
+    </nav>
+  </div>
+</footer>
+<script src="/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Slimy ritual preview</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #1b2233; }
+  body { background: repeating-linear-gradient(45deg, #1b2233 0 24px, #20293d 24px 48px); }
+  canvas { position: fixed; left: 0; top: 0; width: 400px; height: 400px; will-change: transform; }
+  #over { z-index: 2; }
+  .bubble { position: fixed; left: 0; top: 0; z-index: 5; max-width: 280px; padding: 12px 14px; border-radius: 18px;
+    background: rgba(246, 251, 255, 0.94); color: #10213b; font: 15px/1.45 system-ui, sans-serif;
+    box-shadow: 0 6px 24px rgba(10, 30, 70, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.7); opacity: 0; transition: opacity 0.18s ease; will-change: transform; }
+  .bubble.on { opacity: 1; }
+  .bubble::after { content: ""; position: absolute; left: var(--tail, 50%); bottom: -7px; width: 14px; height: 14px; margin-left: -7px; background: inherit; transform: rotate(45deg); border-radius: 3px; }
+  .bubble.below::after { bottom: auto; top: -7px; }
+  .bubble-text { margin: 0; }
+  .bubble-form { display: flex; gap: 8px; margin-top: 10px; }
+  .bubble-form[hidden] { display: none; }
+  .bubble-form input { flex: 1; min-width: 0; font: inherit; padding: 6px 10px; border-radius: 10px; border: 1px solid #9db8dd; background: #fff; color: inherit; }
+  .bubble-form button { font: inherit; padding: 6px 12px; border: 0; border-radius: 10px; background: #2f7be8; color: #fff; }
+  .bubble-error { margin: 6px 0 0; color: #a3322c; font-size: 13px; }
+  .bubble-error:empty { display: none; }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas><canvas id="over"></canvas>
+<div id="bubble" class="bubble"></div>
+<script type="module">
+import init, { Slime } from '../pkg/slimy_wasm.js';
+import { createRenderer } from '../render.js';
+import { loadModel } from '../model.js';
+import { createDialogue } from '../dialogue.js';
+import { createRitual } from '../ritual.js';
+
+const W = innerWidth, H = innerHeight, dpr = devicePixelRatio || 1;
+await init();
+const model = await loadModel('../models/base-slime.json');
+const slime = new Slime(model.body.radius, 0, W, H - 10, 0, W / 2, 120);
+slime.set_breathing(model.body.breathing.speed, model.body.breathing.width, model.body.breathing.height);
+const r = createRenderer({ glCanvas: document.getElementById('gl'), overCanvas: document.getElementById('over'), dpr, model });
+r.init();
+let answer = async () => null;
+const dialogue = createDialogue(document.getElementById('bubble'), { onSubmit: (t) => answer(t) });
+const saved = [];
+const ritual = createRitual({ slime, renderer: r, dialogue, invoke: async (cmd, args) => { saved.push([cmd, args]); return '{}'; }, language: 'fr', model, startAt: 0 });
+answer = (t) => ritual.answer(t);
+
+let clock = 0;
+const stage = new URLSearchParams(location.search).get('stage') ?? 'egg';
+function tick(dt) {
+  clock += dt;
+  for (let i = 0; i < 2; i++) slime.step(1 / 120, -1e6, -1e6, 0);
+  const extras = ritual.finished ? null : ritual.update(clock);
+  const pts = slime.points();
+  let top = 1e9, bottom = -1e9, sum = 0;
+  for (let i = 0; i < pts.length; i += 2) { top = Math.min(top, pts[i + 1]); bottom = Math.max(bottom, pts[i + 1]); sum += pts[i]; }
+  const view = { x: Math.round(slime.centroid_x() - 200), y: Math.round(slime.centroid_y() - 200) };
+  dialogue.place({ x: sum / (pts.length / 2), top, bottom }, { left: 0, top: 0, right: W, bottom: H }, { x: 0, y: 0 });
+  r.draw({ pts, restHeight: slime.rest_height(), radius: model.body.radius, t: clock, dt, view,
+    pointer: { x: 0, y: 0, hover: false, known: false, active: false, speed: 0 }, sleepiness: 0, grabbed: false,
+    orientation: slime.orientation(), gap: slime.surface_gap(), gravityUp: (([x, y]) => ({ x, y }))(slime.gravity_up()),
+    egg: extras?.egg ?? null, awake: extras ? extras.awake : 1, lookOverride: extras?.asking ? { x: 0, y: -0.7 } : null });
+  const shift = `translate(${view.x}px, ${view.y}px)`;
+  document.getElementById('gl').style.transform = shift; document.getElementById('over').style.transform = shift;
+}
+const run = (seconds) => { for (let i = 0; i < seconds * 60; i++) tick(1 / 60); };
+run(3);
+if (stage !== 'egg') { ritual.poke(clock); run(0.4); ritual.poke(clock); run(0.4); }
+if (stage === 'cracked') run(0.6);
+if (stage === 'hatch') { ritual.poke(clock); run(0.35); }
+if (['ask', 'welcome', 'error'].includes(stage)) { ritual.poke(clock); run(3.5); }
+if (stage === 'error') { document.querySelector('.bubble-form input').value = ' '; await answer(' ').then((p) => dialogue.problem(p)); run(0.6); }
+if (stage === 'welcome') { await answer('Okymi'); run(1); await answer('Mochi'); run(1.5); }
+document.title = JSON.stringify(saved);
+requestAnimationFrame(function loop() { tick(1 / 60); requestAnimationFrame(loop); });
+</script>
+</body>
+</html>

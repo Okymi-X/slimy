@@ -1,0 +1,34 @@
+name: Bug report
+description: Something in Slimy does not behave as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Slimy version
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options: [Linux (X11), Linux (Wayland), Windows, macOS]
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Remove any API key or personal data before pasting.
+      render: shell

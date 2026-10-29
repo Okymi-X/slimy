@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Slimy genome preview</title>
+<style>
+  html, body { margin: 0; background: #1b2233; color: #cfd8ef; font: 13px system-ui; }
+  main { display: grid; grid-template-columns: repeat(4, 400px); gap: 0; }
+  .cell { position: relative; width: 400px; height: 420px; background: repeating-linear-gradient(45deg, #1b2233 0 24px, #20293d 24px 48px); }
+  .cell canvas { position: absolute; left: 0; top: 0; width: 400px; height: 400px; }
+  .cell p { position: absolute; left: 10px; bottom: 6px; margin: 0; }
+</style>
+</head>
+<body>
+<main id="grid"></main>
+<script type="module">
+import init, { Slime } from '../pkg/slimy_wasm.js';
+import { createRenderer } from '../render.js';
+import { loadModel, normalizeModel } from '../model.js';
+import { applyLook } from '../genetics.js';
+
+await init();
+const base = await loadModel('../models/base-slime.json');
+const materials = new URLSearchParams(location.search).has('materials');
+const names = ['stripes', 'honey', 'crystal', 'fur', 'lava', 'stars'];
+const cells = materials
+  ? ['plain', ...names, 'mixed'].map((label) => ({ label, layers: Object.fromEntries(names.map((key) => [key, label === 'mixed' ? 0.5 : Number(label === key)])) }))
+  : await (await fetch('./genome-looks.json')).json();
+const dpr = 1;
+const grid = document.getElementById('grid');
+const random = Math.random;
+let seed = 1;
+Math.random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
+try {
+for (const { label, look, layers } of cells) {
+  seed = 1;
+  const cell = document.createElement('div');
+  cell.className = 'cell';
+  cell.innerHTML = '<canvas class="gl"></canvas><canvas class="over"></canvas>';
+  const caption = document.createElement('p');
+  caption.textContent = materials ? label : `${label} (${look.stage}, radius ${look.radius.toFixed(0)})`;
+  cell.append(caption);
+  grid.append(cell);
+  const model = materials ? normalizeModel({ ...base, material: { ...base.material, layers } }) : applyLook(base, look);
+  const slime = new Slime(model.body.radius, 0, 400, 392, 0, 200, 150);
+  slime.set_shape(model.body.shape.top, model.body.shape.bottom, model.body.shape.baseWidth);
+  slime.set_breathing(model.body.breathing.speed, model.body.breathing.width, model.body.breathing.height);
+  const renderer = createRenderer({ glCanvas: cell.querySelector('.gl'), overCanvas: cell.querySelector('.over'), dpr, model });
+  renderer.init();
+  for (let i = 0; i < 720; i++) slime.step(1 / 120, -1e6, -1e6, 0);
+  let t = 0;
+  for (let i = 0; i < 90; i++) {
+    slime.step(1 / 120, -1e6, -1e6, 0); slime.step(1 / 120, -1e6, -1e6, 0);
+    t += 1 / 60;
+    renderer.draw({
+      pts: slime.points(), restHeight: slime.rest_height(), radius: model.body.radius, t, dt: 1 / 60, view: { x: 0, y: 0 },
+      pointer: { x: 330, y: 120, hover: false, known: true, active: false, speed: 0 }, sleepiness: 0, grabbed: false,
+      orientation: slime.orientation(), gap: slime.surface_gap(), gravityUp: (([x, y]) => ({ x, y }))(slime.gravity_up()),
+      intent: 'idle', crouching: false, impact: 0,
+    });
+  }
+}
+} finally { Math.random = random; }
+document.title = 'ready';
+</script>
+</body>
+</html>

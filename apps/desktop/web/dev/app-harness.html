@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Slimy</title>
+<style>
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; user-select: none; -webkit-user-select: none; }
+  canvas { position: fixed; left: 0; top: 0; width: 400px; height: 400px; touch-action: none; will-change: transform; }
+  #over { z-index: 2; }
+  .bubble { position: fixed; left: 0; top: 0; z-index: 5; max-width: 280px; padding: 12px 14px; border-radius: 18px;
+    background: rgba(246, 251, 255, 0.94); color: #10213b; font: 15px/1.45 system-ui, sans-serif;
+    box-shadow: 0 6px 24px rgba(10, 30, 70, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+    opacity: 0; transition: opacity 0.18s ease; will-change: transform; user-select: text; -webkit-user-select: text; }
+  .bubble.on { opacity: 1; }
+  .bubble::after { content: ""; position: absolute; left: var(--tail, 50%); bottom: -7px; width: 14px; height: 14px; margin-left: -7px;
+    background: inherit; transform: rotate(45deg); border-radius: 3px; }
+  .bubble.below::after { bottom: auto; top: -7px; }
+  .bubble-text { margin: 0; }
+  .bubble-form { display: flex; gap: 8px; margin-top: 10px; }
+  .bubble-form[hidden] { display: none; }
+  .bubble-form input { flex: 1; min-width: 0; font: inherit; padding: 6px 10px; border-radius: 10px; border: 1px solid #9db8dd; background: #fff; color: inherit; }
+  .bubble-form button { font: inherit; padding: 6px 12px; border: 0; border-radius: 10px; background: #2f7be8; color: #fff; cursor: pointer; }
+  .bubble-form .mic { padding: 6px 9px; display: inline-flex; align-items: center; }
+  .bubble-form .mic[hidden] { display: none; }
+  .bubble-form .mic.on { background: #d6304a; }
+  .bubble-form .ghost { background: transparent; color: #2b5fae; border: 1px solid #9db8dd; }
+  .bubble-form .ghost[hidden] { display: none; }
+  .bubble-form input:focus-visible, .bubble-form button:focus-visible { outline: 2px solid #0b4fb3; outline-offset: 2px; }
+  .bubble-error { margin: 6px 0 0; color: #a3322c; font-size: 13px; min-height: 0; }
+  .bubble-error:empty { display: none; }
+  .panel { width: 330px; max-width: 330px; z-index: 6; max-height: calc(100vh - 60px); overflow-y: auto; }
+  .panel h2 { margin: 0 0 8px; font-size: 16px; }
+  .panel-field { display: block; margin: 8px 0 0; font-size: 13px; }
+  .panel-field[hidden], .panel-note[hidden] { display: none; }
+  .panel-field span { display: block; margin-bottom: 3px; color: #46618d; }
+  .panel-field input, .panel-field select { width: 100%; box-sizing: border-box; font: inherit; padding: 6px 10px; border-radius: 10px; border: 1px solid #9db8dd; background: #fff; color: inherit; }
+  .panel-field input:focus-visible, .panel-field select:focus-visible, .panel button:focus-visible { outline: 2px solid #0b4fb3; outline-offset: 2px; }
+  .panel-note { margin: 6px 0 0; font-size: 12px; color: #46618d; }
+  .panel-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .panel-buttons button { font: inherit; font-size: 13px; padding: 6px 10px; border: 0; border-radius: 10px; background: #2f7be8; color: #fff; cursor: pointer; }
+  .panel-buttons .ghost { background: transparent; color: #2b5fae; border: 1px solid #9db8dd; }
+  .power-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; margin-top: 8px; font-size: 13px; }
+  .power-row button { font: inherit; font-size: 12px; padding: 4px 8px; border: 0; border-radius: 10px; background: #2f7be8; color: #fff; cursor: pointer; }
+  .power-row .ghost { background: transparent; color: #2b5fae; border: 1px solid #9db8dd; }
+  .panel h3 { margin: 12px 0 4px; font-size: 13px; }
+  .power-log { margin: 0; padding-left: 16px; font-size: 12px; color: #46618d; }
+  #watching { position: fixed; right: 12px; top: 12px; padding: 4px 10px; border-radius: 12px; background: #2f7be8; color: #fff; font-size: 12px; z-index: 7; pointer-events: none; }
+  #watching[hidden] { display: none; }
+  .panel-status { margin: 8px 0 0; font-size: 13px; min-height: 1.2em; }
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<canvas id="over" aria-label="Slimy, ton compagnon"></canvas>
+<div id="bubble" class="bubble" role="dialog" aria-live="polite"></div>
+<div id="perms" class="bubble panel" role="dialog" aria-label="Pouvoirs"></div>
+<div id="watching" hidden></div>
+<div id="settings" class="bubble panel" role="dialog" aria-label="Cerveau"></div>
+<script>window.__granted = new Set(); window.__journal = [];</script>
+<script>
+(() => {
+  const query = new URLSearchParams(location.search);
+  const soul = {"version": 1, "user_name": "Okymi", "slime_name": "Slimy", "language": "en", "born_at": 1793023968, "tone": {"affection": 0.5, "curiosity": 0.5, "energy": 0.5, "tenacity": 0.5}, "relation": {"affection": 0.8580281, "trust": 0.5145071, "resentment": 0.0}, "genome": {"genes": [0.81525195, 0.84356666, 0.41076064, 0.7725077, 0.572213, 0.552927, 0.343425, 0.38092512, 0.30308864, 0.43602276, 0.63416743, 0.41038498, 0.74363846, 0.5733311, 0.4235006, 0.7430381, 1.0, 0.9138999, 0.0, 0.0, 0.2, 0.0, 0.0, 0.085953794, 0.0], "nights": 10, "history": [{"night": 1, "seed": 1095156017419500933, "deltas": [[0, 0.029239058], [3, 0.01940906], [7, -0.019996703], [8, -0.01999998], [10, 0.01999998], [12, 0.01940906], [15, 0.019996703], [16, 0.01999998], [17, 0.01940906], [23, 0.009242343]], "mutation": null}, {"night": 2, "seed": 12495870836732854682, "deltas": [[0, 0.029239058], [3, 0.01940906], [7, -0.019996703], [8, -0.01999998], [10, 0.01999998], [12, 0.01940906], [15, 0.019996703], [16, 0.01999998], [17, 0.01940906], [23, 0.009242343]], "mutation": null}, {"night": 3, "seed": 5449841582265501039, "deltas": [[0, 0.010754347], [3, 0.01940906], [7, -0.019996703], [8, -0.01999998], [10, 0.01999998], [12, 0.01940906], [15, 0.019996703], [16, 0.01999998], [17, 0.01940906], [20, 0.2], [23, 0.009242343]], "mutation": 20}, {"night": 4, "seed": 16850556401612425540, "deltas": [[0, 0.0096789], [3, 0.017468154], [7, -0.017997026], [8, -0.017999977], [10, 0.017999947], [12, 0.017468154], [15, 0.017997026], [16, 0.017999947], [17, 0.017468154], [23, 0.008318109]], "mutation": null}, {"night": 5, "seed": 9804527147216375129, "deltas": [[0, 0.0096789], [3, 0.017468154], [7, -0.017997026], [8, -0.017999977], [10, 0.017999947], [12, 0.017468154], [15, 0.017997026], [16, 0.017999947], [17, 0.017468154], [23, 0.008318108]], "mutation": null}, {"night": 6, "seed": 2758497892891496750, "deltas": [[0, 0.0096789], [3, 0.017468154], [7, -0.017997026], [8, -0.017999977], [10, 0.017999947], [12, 0.017468154], [15, 0.017997026], [16, 0.017999947], [17, 0.017468154], [23, 0.008318108]], "mutation": null}, {"night": 7, "seed": 14159212712204997891, "deltas": [[0, 0.0096789], [3, 0.017468154], [7, -0.017997026], [8, -0.017999977], [10, 0.017999947], [12, 0.017468154], [15, 0.017997026], [16, 0.017999947], [17, 0.017468154], [23, 0.008318108]], "mutation": null}, {"night": 8, "seed": 7113183457842370840, "deltas": [[0, 0.0096789], [3, 0.017468154], [7, -0.017997026], [8, -0.017999977], [10, 0.017999947], [12, 0.017468154], [15, 0.017997026], [16, 0.017999947], [17, 0.017468154], [23, 0.008318111]], "mutation": null}, {"night": 9, "seed": 67154199885356269, "deltas": [[0, 0.0096789], [3, 0.017468154], [7, -0.017997026], [8, -0.017999977], [10, 0.017999947], [12, 0.017468154], [15, 0.017997026], [16, 0.00053817034], [17, 0.017468154], [23, 0.008318111]], "mutation": null}, {"night": 10, "seed": 11467869019198742722, "deltas": [[0, 0.0096789], [3, 0.017468154], [7, -0.017997026], [8, -0.017999977], [10, 0.017999947], [12, 0.017468154], [15, 0.017997026], [17, 0.017468154], [23, 0.008318111]], "mutation": null}]}, "day": {"day": 20762, "caress_seconds": 26.167002, "throws": 13, "answered": 0, "ignored": 0, "messages": 0, "active_seconds": 2437.2112, "night_seconds": 0.0, "calmed_alone": 0}, "facts": [{"key": "favorite_color", "value": "blue", "learned_at": 1793024000}]};
+  window.__listeners = {}; window.__emit = (name, payload) => (window.__listeners[name] || []).forEach((h) => h({ payload })); window.__calls = []; window.__errors = []; window.__menu = null; window.__created = null;
+  const answer = async (cmd, args) => {
+    window.__calls.push([cmd, args]);
+    switch (cmd) {
+      case 'world': return { scale_factor: 1, size_scale: Number(query.get('size') || 1), index: 0, count: 1, preference: 'primary', left: 0, top: 0, right: Math.round(innerWidth * devicePixelRatio), bottom: Math.round(innerHeight * devicePixelRatio) };
+      case 'soul_load': return window.__created ? JSON.stringify(window.__created) : query.has('nosoul') ? null : JSON.stringify(soul);
+      case 'soul_create': window.__created = { ...soul, user_name: args.userName, slime_name: args.slimeName, language: args.language, facts: [] }; return null;
+      case 'genome_preview': return null;
+      case 'genome_state': return query.has('nosoul') ? null : { look: null, night: null };
+      case 'perms_state': return { powers: ['active_app', 'clipboard', 'screen', 'files', 'tool', 'pointer', 'microphone'], sensitive: ['clipboard', 'screen', 'pointer', 'microphone'], active: [...window.__granted], journal: window.__journal };
+      case 'perms_grant': window.__granted.add(args.power); window.__journal.unshift({ at: 1, power: args.power, verdict: 'allowed', note: '' }); return null;
+      case 'perms_revoke': if (args.power) window.__granted.delete(args.power); else window.__granted.clear(); return null;
+      case 'voice_status': return { installed: { speech: true, hearing: !query.has('noears'), hearing_base: !query.has('noears'), hearing_small: query.has('smallears') }, config: { replies: true, style: window.__voiceStyle ?? 'auto', hearing: window.__voiceHearing ?? 'base' }, megabytes: { speech: 126, hearing: 198, hearing_small: 610 }, voice: { name: 'ff_siwis', speed: 1, pitch: 1.07 } };
+      case 'voice_config_save': window.__voiceStyle = args.style; window.__voiceHearing = args.hearing; return null;
+      case 'voice_listen': window.__listened = true; return 'Quelle heure est-il ?';
+      case 'voice_stop_listening': return null;
+      case 'voice_speak': window.__spoken = (window.__spoken || []).concat(args.text); window.__emit?.('voice-level', { kind: 'voice', level: 0.7 }); return null;
+      case 'voice_stop_speaking': return null;
+      case 'brain_chat': {
+        // A test may script the next replies with window.__brain = [reply | { error }], consumed in order.
+        const next = (window.__brain || []).shift();
+        if (next) { window.__brainSeen = (window.__brainSeen || []).concat([JSON.parse(JSON.stringify(args.history))]); if (next.error) throw next.error; return next; }
+        return { say: 'Il est midi, je crois.', expression: 'happy', valence: 0.4, arousal: 0.3 };
+      }
+      case 'skill_read': if (args.name === 'standup') return 'Ask three questions: done, next, blocked.'; throw 'skill_unknown';
+      case 'memory_list': return [{ key: 'favorite_color', value: 'green', learned_at: 1 }];
+      case 'memory_forget': return null;
+      case 'reminder_list': return [{ id: 1, at: 2000000000, text: 'stretch', every_day: false }];
+      case 'reminder_add': case 'reminder_remove': return null;
+      case 'reminders_due': { const due = window.__due || []; window.__due = []; return due; }
+      case 'learn_report': return [{ decision: 'remark_gap', context: 2, best: 1500, tries: 14, confidence: 0.72 }, { decision: 'voice_pace', context: 3, best: 1.08, tries: 9, confidence: 0.55 }, { decision: 'walk_gap', context: 1, best: 90, tries: 6, confidence: 0.6 }, { decision: 'greeting_style', context: 0, best: 2, tries: 5, confidence: 0.5 }];
+      case 'learn_reset': window.__learnReset = true; return null;
+      case 'learn_choose': return { arm: 1, value: args.decision === 'voice_pace' ? 1 : 900 };
+      case 'learn_reward': (window.__rewards = window.__rewards || []).push(args); return null;
+      case 'display_status': return { screens: [{ rect: { x: 0, y: 0, w: 1920, h: 1080 }, work: { x: 0, y: 32, w: 1920, h: 1048 }, scale: 1, primary: true }, { rect: { x: 1920, y: 0, w: 2560, h: 1440 }, work: { x: 1920, y: 0, w: 2560, h: 1440 }, scale: 1.5, primary: false }], layout: { index: 0, count: 2, preference: window.__display || 'primary' } };
+      case 'display_save': window.__display = args.monitor; return null;
+      case 'brain_config': return { config: { provider: query.get('provider') || 'groq', model: '', temperature: 0.7, max_tokens: 700 } };
+      case 'pointer_position': return null;
+      case 'log_error': window.__errors.push(args && args.message); return null;
+      case 'brain_providers': return [
+        { id: 'groq', name: 'Groq', protocol: 'openai', base_url: 'https://api.groq.com/openai/v1', default_model: 'openai/gpt-oss-120b', needs_key: true, note: '' },
+        { id: 'openai', name: 'OpenAI', protocol: 'openai', base_url: 'https://api.openai.com/v1', default_model: 'gpt-4o-mini', needs_key: true, note: '' },
+      ];
+      case 'slime_export': if (window.__slime?.exportError) throw window.__slime.exportError; return window.__slime?.exportPath ?? '/home/u/exports/slimy.slime';
+      case 'slime_import_preview': if (window.__slime?.previewError) throw window.__slime.previewError; return window.__slime && 'preview' in window.__slime ? window.__slime.preview : { file: 'slimy.slime', slime_name: 'Blob', nights: 12, facts: 3 };
+      case 'slime_import_apply': if (window.__slime?.applyError) throw window.__slime.applyError; return null;
+      case 'brain_has_key': return true;
+      case 'brain_save': window.__brainSaved = JSON.parse(args.config); return null;
+      default: return null;
+    }
+  };
+  window.__TAURI__ = {
+    core: { invoke: answer },
+    event: { listen: async (name, handler) => { (window.__listeners[name] = window.__listeners[name] || []).push(handler); return () => {}; } },
+    window: { getCurrentWindow: () => ({ innerPosition: async () => ({ x: 0, y: 0 }), setFocus: async () => {} }) },
+    menu: { Menu: { new: async (opts) => { window.__menu = opts.items; return { popup() {} }; } } },
+  };
+  document.documentElement.style.background = '#1b2236';
+  document.body.style.background = '#1b2236';
+})();
+</script>
+<script type="module" src="../main.js"></script>
+</body>
+</html>

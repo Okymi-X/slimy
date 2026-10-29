@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+env:
+  WASM_BINDGEN_VERSION: "0.2.129"
+
+jobs:
+  build:
+    name: Bundle ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: linux, os: ubuntu-24.04, experimental: false, bundles: "appimage,deb" }
+          - { name: windows, os: windows-latest, experimental: true, bundles: "msi" }
+          - { name: macos, os: macos-latest, experimental: true, bundles: "dmg" }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential pkg-config cmake clang libclang-dev \
+            libwebkit2gtk-4.1-dev libgtk-3-dev libsoup-3.0-dev librsvg2-dev \
+            libssl-dev libayatana-appindicator3-dev libxdo-dev \
+            libasound2-dev libdbus-1-dev libpipewire-0.3-dev libspa-0.2-dev \
+            libgbm-dev libdrm-dev libxcb1-dev libxcb-randr0-dev libxcb-shm0-dev \
+            libxkbcommon-dev libwayland-dev libegl1-mesa-dev xdg-utils
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Install wasm-bindgen-cli and tauri-cli
+        shell: bash
+        run: |
+          cargo install wasm-bindgen-cli --version "$WASM_BINDGEN_VERSION" --locked
+          cargo install tauri-cli --version "^2" --locked
+
+      - name: Build the web bundle
+        shell: bash
+        run: ./scripts/build-web.sh
+
+      - name: Generate platform icons from the source icon
+        shell: bash
+        working-directory: apps/desktop/src-tauri
+        run: cargo tauri icon icons/icon.png
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: apps/desktop
+          tauriScript: cargo tauri
+          tagName: ${{ github.ref_name }}
+          releaseName: Slimy ${{ github.ref_name }}
+          releaseDraft: true
+          prerelease: false
+          args: --config ../../../.github/tauri-bundle.json --bundles ${{ matrix.bundles }}
+
+  checksums:
+    needs: build
+    if: ${{ !cancelled() && needs.build.result != 'failure' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Compute and upload SHA256SUMS
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          mkdir assets
+          gh release download "$TAG" --dir assets --pattern '*' --clobber
+          cd assets
+          rm -f SHA256SUMS.txt
+          sha256sum * > SHA256SUMS.txt
+          gh release upload "$TAG" SHA256SUMS.txt --clobber

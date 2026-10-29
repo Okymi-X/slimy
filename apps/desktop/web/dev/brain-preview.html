@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Slimy ritual preview</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #1b2233; }
+  body { background: repeating-linear-gradient(45deg, #1b2233 0 24px, #20293d 24px 48px); }
+  canvas { position: fixed; left: 0; top: 0; width: 400px; height: 400px; will-change: transform; }
+  #over { z-index: 2; }
+  .bubble { position: fixed; left: 0; top: 0; z-index: 5; max-width: 280px; padding: 12px 14px; border-radius: 18px;
+    background: rgba(246, 251, 255, 0.94); color: #10213b; font: 15px/1.45 system-ui, sans-serif;
+    box-shadow: 0 6px 24px rgba(10, 30, 70, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.7); opacity: 0; transition: opacity 0.18s ease; will-change: transform; }
+  .bubble.on { opacity: 1; }
+  .bubble::after { content: ""; position: absolute; left: var(--tail, 50%); bottom: -7px; width: 14px; height: 14px; margin-left: -7px; background: inherit; transform: rotate(45deg); border-radius: 3px; }
+  .bubble.below::after { bottom: auto; top: -7px; }
+  .bubble-text { margin: 0; }
+  .bubble-form { display: flex; gap: 8px; margin-top: 10px; }
+  .bubble-form[hidden] { display: none; }
+  .bubble-form input { flex: 1; min-width: 0; font: inherit; padding: 6px 10px; border-radius: 10px; border: 1px solid #9db8dd; background: #fff; color: inherit; }
+  .bubble-form button { font: inherit; padding: 6px 12px; border: 0; border-radius: 10px; background: #2f7be8; color: #fff; }
+  .bubble-error { margin: 6px 0 0; color: #a3322c; font-size: 13px; }
+  .bubble-error:empty { display: none; }
+  .panel { width: 330px; z-index: 6; }
+  .panel h2 { margin: 0 0 8px; font-size: 16px; }
+  .panel-field { display: block; margin: 8px 0 0; font-size: 13px; }
+  .panel-field[hidden], .panel-note[hidden] { display: none; }
+  .panel-field span { display: block; margin-bottom: 3px; color: #46618d; }
+  .panel-field input, .panel-field select { width: 100%; box-sizing: border-box; font: inherit; padding: 6px 10px; border-radius: 10px; border: 1px solid #9db8dd; background: #fff; }
+  .panel-note { margin: 6px 0 0; font-size: 12px; color: #46618d; }
+  .panel-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .panel-buttons button { font: inherit; font-size: 13px; padding: 6px 10px; border: 0; border-radius: 10px; background: #2f7be8; color: #fff; }
+  .panel-buttons .ghost { background: transparent; color: #2b5fae; border: 1px solid #9db8dd; }
+  .panel-status { margin: 8px 0 0; font-size: 13px; min-height: 1.2em; }
+  .bubble-form .ghost { background: transparent; color: #2b5fae; border: 1px solid #9db8dd; }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas><canvas id="over"></canvas>
+<div id="bubble" class="bubble"></div>
+<div id="settings" class="bubble panel"></div>
+<script type="module">
+import init, { Slime } from '../pkg/slimy_wasm.js';
+import { createRenderer } from '../render.js';
+import { loadModel } from '../model.js';
+import { createDialogue } from '../dialogue.js';
+import { createChat } from '../chat.js';
+import { createSettings } from '../settings.js';
+
+const W = innerWidth, H = innerHeight, dpr = devicePixelRatio || 1;
+await init();
+const model = await loadModel('../models/base-slime.json');
+const slime = new Slime(model.body.radius, 0, W, H - 10, 0, W / 2, 120);
+slime.set_breathing(model.body.breathing.speed, model.body.breathing.width, model.body.breathing.height);
+const r = createRenderer({ glCanvas: document.getElementById('gl'), overCanvas: document.getElementById('over'), dpr, model });
+r.init();
+const stage = new URLSearchParams(location.search).get('stage') ?? 'settings';
+const providers = [
+  { id: 'groq', name: 'Groq', protocol: 'openai', base_url: 'https://api.groq.com/openai/v1', default_model: 'openai/gpt-oss-120b', needs_key: true, note: 'Very fast. Key starts with gsk_.' },
+  { id: 'openai', name: 'OpenAI', protocol: 'openai', base_url: 'https://api.openai.com/v1', default_model: 'gpt-4o-mini', needs_key: true, note: '' },
+  { id: 'anthropic', name: 'Anthropic', protocol: 'anthropic', base_url: '', default_model: 'claude-haiku-5-5', needs_key: true, note: '' },
+];
+const invoke = async (cmd) => {
+  if (cmd === 'brain_providers') return providers;
+  if (cmd === 'brain_config') return { config: { provider: 'groq', model: 'openai/gpt-oss-120b', base_url: null, region: null, temperature: 0.8, max_tokens: 220 }, has_key: true };
+  if (cmd === 'brain_has_key') return true;
+  if (cmd === 'brain_chat') return { say: 'Salut ! Je suis là, prêt à jouer.', expression: 'happy', valence: 0.7, arousal: 0.4 };
+  return null;
+};
+let answer = async () => null, later = () => {};
+const dialogue = createDialogue(document.getElementById('bubble'), { onSubmit: (t) => answer(t), onLater: () => later() });
+const chat = createChat({ dialogue, invoke, language: 'fr', onExpression: (n, s) => r.hint(n, s), isSulking: () => false });
+const settings = createSettings(document.getElementById('settings'), { invoke, language: 'fr', onClose: () => {} });
+answer = (t) => chat.answer(t); later = () => chat.close();
+let clock = 0;
+function tick(dt) {
+  clock += dt;
+  for (let i = 0; i < 2; i++) slime.step(1 / 120, -1e6, -1e6, 0);
+  const pts = slime.points();
+  let top = 1e9, bottom = -1e9, sum = 0;
+  for (let i = 0; i < pts.length; i += 2) { top = Math.min(top, pts[i + 1]); bottom = Math.max(bottom, pts[i + 1]); sum += pts[i]; }
+  const view = { x: Math.round(slime.centroid_x() - 200), y: Math.round(slime.centroid_y() - 200) };
+  const anchor = { x: sum / (pts.length / 2), top, bottom }, area = { left: 0, top: 0, right: W, bottom: H };
+  dialogue.place(anchor, area, { x: 0, y: 0 }, dt); settings.place(anchor, area, { x: 0, y: 0 }, dt);
+  r.draw({ pts, restHeight: slime.rest_height(), radius: model.body.radius, t: clock, dt, view,
+    pointer: { x: 0, y: 0, hover: false, known: false, active: false, speed: 0 }, sleepiness: 0, grabbed: false, sulking: false,
+    orientation: slime.orientation(), gap: slime.surface_gap(), gravityUp: (([x, y]) => ({ x, y }))(slime.gravity_up()),
+    egg: null, awake: 1, lookOverride: chat.open ? { x: 0, y: -0.7 } : null });
+  const shift = `translate(${view.x}px, ${view.y}px)`;
+  document.getElementById('gl').style.transform = shift; document.getElementById('over').style.transform = shift;
+}
+const run = (s) => { for (let i = 0; i < s * 60; i++) tick(1 / 60); };
+run(4);
+if (stage === 'settings') await settings.open();
+if (stage === 'chat') { chat.start(); run(0.3); await chat.answer('Salut Mochi'); }
+run(1.5);
+requestAnimationFrame(function loop() { tick(1 / 60); requestAnimationFrame(loop); });
+</script>
+</body>
+</html>

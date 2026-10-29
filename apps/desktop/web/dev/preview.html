@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Slimy preview</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #1b2233; overflow: hidden; }
+  body { background: repeating-linear-gradient(45deg, #1b2233 0 24px, #20293d 24px 48px); }
+  canvas { position: fixed; left: 0; top: 0; width: 400px; height: 400px; }
+  #over { z-index: 2; }
+  nav { position: fixed; z-index: 3; left: 12px; top: 12px; display: flex; gap: 8px; }
+  nav button { font: 13px system-ui; padding: 4px 10px; }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas><canvas id="over"></canvas>
+<nav>
+  <button data-p="blue">bleu</button><button data-p="rose">rose</button><button data-p="mint">menthe</button>
+  <button data-p="amber">ambre</button><button data-p="violet">violet</button>
+  <button id="kick">lancer</button>
+</nav>
+<script type="module">
+import init, { Slime, Roamer } from '../pkg/slimy_wasm.js';
+import { createRenderer } from '../render.js';
+import { loadModel } from '../model.js';
+import { createRoam } from '../roam.js';
+import { profile, formColors, formShape, formInk } from '../forms.js';
+
+const W = innerWidth, H = innerHeight, dpr = devicePixelRatio || 1;
+await init();
+const model = await loadModel('../models/base-slime.json');
+const query = new URLSearchParams(location.search);
+const formName = query.get('form');
+if (query.has('radius')) model.body.radius = Number(query.get('radius'));
+for (const key of ['fur', 'crystal', 'honey', 'lava', 'stars', 'stripes']) if (query.has(key)) model.material.layers[key] = Number(query.get(key));
+const slime = new Slime(model.body.radius, 0, W, H - 10, 0, W / 2, 120);
+slime.set_shape(model.body.shape.top, model.body.shape.bottom, model.body.shape.baseWidth);
+slime.set_breathing(model.body.breathing.speed, model.body.breathing.width, model.body.breathing.height);
+const r = createRenderer({ glCanvas: document.getElementById('gl'), overCanvas: document.getElementById('over'), dpr, model });
+r.init();
+
+if (formName) { slime.set_shape(...formShape(formName, [model.body.shape.top, model.body.shape.bottom, model.body.shape.baseWidth])); slime.set_profile(profile(formName)); const c = formColors(formName); if (c) r.setColors(c); r.setInk(formInk(formName)); }
+const ptr = { x: -1e6, y: -1e6, c: 0 };
+const far = location.search.includes('look');
+if (far) { ptr.x = W - 30; ptr.y = 40; }
+const sleepiness = location.search.includes('sleepy') ? 0.85 : 0;
+const roam = location.search.includes('roam') ? createRoam({ slime, roamer: new Roamer(3, 0, W, 0, H - 10), radius: model.body.radius }) : null;
+let roaming = { gaze: null, intent: 'idle', crouching: false };
+let impact = 0;
+const over = document.getElementById('over');
+over.addEventListener('pointermove', (e) => { ptr.x = e.clientX; ptr.y = e.clientY; if (ptr.c === 0) ptr.c = 1; });
+over.addEventListener('pointerdown', (e) => { ptr.x = e.clientX; ptr.y = e.clientY; ptr.c = 2; over.setPointerCapture(e.pointerId); });
+over.addEventListener('pointerup', () => { ptr.c = 1; });
+document.querySelectorAll('[data-p]').forEach((b) => b.addEventListener('click', () => r.setPalette(b.dataset.p)));
+document.getElementById('kick').addEventListener('click', () => slime.impulse(-900, -1400));
+for (let i = 0; i < 480 && location.search.includes('settle'); i++) slime.step(1 / 120, -1e6, -1e6, 0);
+if (location.search.includes('stretch')) {
+  const c = { x: slime.centroid_x(), y: slime.centroid_y() };
+  for (let i = 0; i < 12; i++) slime.step(1 / 120, c.x, c.y - 30, 2);
+  for (let i = 0; i < 90; i++) slime.step(1 / 120, c.x + i * 1.5, c.y - 30 - i * 2.2, 2);
+  ptr.c = location.search.includes('hold') ? 2 : 0;
+  if (ptr.c === 2) { ptr.x = c.x + 134; ptr.y = c.y - 30 - 198; }
+}
+if (location.search.includes('side')) {
+  const c = { x: slime.centroid_x(), y: slime.centroid_y() };
+  for (let i = 0; i < 12; i++) slime.step(1 / 120, c.x + 60, c.y, 2);
+  for (let i = 0; i < 100; i++) slime.step(1 / 120, c.x + 60, c.y - i * 2.2, 2);
+  ptr.c = 2; ptr.x = c.x + 60; ptr.y = c.y - 220;
+}
+if (query.has('poke')) { const [dx, dy] = query.get('poke').split(',').map(Number); ptr.c = 1; ptr.x = slime.centroid_x() + dx; ptr.y = slime.centroid_y() + dy; }
+if (location.search.includes('pet')) { ptr.c = 1; ptr.x = slime.centroid_x(); ptr.y = slime.centroid_y() - 10; }
+if (location.search.includes('wall')) {
+  slime.impulse(-1500, -250);
+  for (let i = 0; i < 480; i++) slime.step(1 / 120, -1e6, -1e6, 0);
+}
+if (query.has('flow')) slime.set_arm_style(1.65, 0.86);
+if (query.has('arm')) slime.reach_toward(1, query.has('armup') ? -1.2 : -0.35, 1);
+function paint(now, dt) {
+  const view = { x: Math.round(slime.centroid_x() - 200), y: Math.round(slime.centroid_y() - 200) };
+  r.draw({ pts: slime.points(), restHeight: slime.rest_height(), radius: model.body.radius, t: now, dt,
+    form: formName, arm: { extent: slime.arm_extent(), x: slime.arm_direction()[0], y: slime.arm_direction()[1] }, lookOverride: roaming.gaze, intent: roaming.intent, catchPhase: window.__swallow ?? query.get('swallow') ?? 'none', crouching: roaming.crouching, impact,
+    pointer: { x: ptr.x, y: ptr.y, hover: ptr.c !== 0, known: far || ptr.c !== 0, active: ptr.c !== 0, speed: ptr.c !== 0 ? 200 : 0 }, sleepiness, grabbed: slime.is_grabbed(), orientation: slime.orientation(), gap: slime.surface_gap(), gravityUp: (([x, y]) => ({ x, y }))(slime.gravity_up()), view });
+  const shift = `translate(${view.x}px, ${view.y}px)`;
+  document.getElementById('gl').style.transform = shift; over.style.transform = shift;
+}
+let clock = 0;
+if (location.search.includes('warm')) {
+  for (let i = 0; i < 360; i++) { slime.step(1 / 120, ptr.x, ptr.y, ptr.c); slime.step(1 / 120, ptr.x, ptr.y, ptr.c); clock += 1 / 60; paint(clock, 1 / 60); }
+}
+let last = performance.now() / 1000 + clock, owed = 0;
+window.__fps = 0;
+function frame(ms) {
+  const now = ms / 1000 + clock, dt = Math.min(now - last, 0.1);
+  window.__fps = 0.9 * window.__fps + 0.1 / Math.max(dt, 1e-3);
+  last = now; owed += dt;
+  impact = 0;
+  while (owed >= 1 / 120) {
+    if (roam) roaming = roam.update(now - owed, { busy: false, sulking: false, sleepiness, affection: 0.5, pointer: { x: ptr.x, y: ptr.y, known: ptr.c !== 0, active: ptr.c !== 0 } }, 1 / 120);
+    slime.step(1 / 120, ptr.x, ptr.y, ptr.c);
+    impact = Math.max(impact, slime.last_impact());
+    owed -= 1 / 120;
+  }
+  paint(now, dt);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+window.__slime = slime;
+{ const xs = slime.points().filter((_, i) => i % 2 === 0), ys = slime.points().filter((_, i) => i % 2 === 1); document.title = JSON.stringify({ W, H, cx: slime.centroid_x(), cy: slime.centroid_y(), x: [Math.min(...xs), Math.max(...xs)], y: [Math.min(...ys), Math.max(...ys)], orient: slime.orientation() }); }
+</script>
+</body>
+</html>

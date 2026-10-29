@@ -1,0 +1,38 @@
+{
+  "id": "slimy.base",
+  "name": "Slime de base",
+  "version": 1,
+  "body": {
+    "radius": 64,
+    "shape": { "top": 0.9, "bottom": 0.5, "baseWidth": 1.04 },
+    "breathing": { "speed": 1.7, "width": 0.016, "height": 0.026 }
+  },
+  "material": {
+    "colors": {
+      "top": [0.55, 0.86, 1.0],
+      "mid": [0.2, 0.58, 0.95],
+      "bot": [0.08, 0.32, 0.85],
+      "light": [0.8, 0.94, 1.0],
+      "core": [0.06, 0.25, 0.73]
+    },
+    "opacity": 0.6,
+    "edgeOpacity": 0.3,
+    "glow": 0.3,
+    "gloss": 1.0,
+    "ripple": 0.06,
+    "thickness": 0.42,
+    "coreRadius": 0.45,
+    "coreStrength": 0.6
+  },
+  "bubbles": { "count": 12, "scale": 1.0, "rise": 1.0 },
+  "face": {
+    "eyes": { "width": 0.055, "aspect": 1.45, "separation": 0.17, "height": 0.54, "color": "#10213b" },
+    "mouth": { "width": 0.04, "drop": 0.13 },
+    "blush": true,
+    "look": { "range": [0.17, 0.12], "follow": 10 },
+    "lag": { "velocity": 0.011, "inertia": 0.6, "stiffness": 120, "damping": 13 },
+    "blink": { "min": 2.5, "max": 6 }
+  },
+  "motion": { "idleGaze": true },
+  "accessories": []
+}
