@@ -1,10 +1,19 @@
-# cargo-deny policy. Run: cargo deny check licenses bans
-# The workspace crates themselves carry no license field yet: set
-# `license = "MIT"` in [workspace.package] and `license.workspace = true` in
-# each crate before publishing (cargo-deny reports them as unlicensed otherwise).
+# cargo-deny policy. Run: cargo deny check
+# The workspace crates carry `license = "MIT"` through [workspace.package].
 
 [graph]
 all-features = true
+
+[advisories]
+# Unmaintained transitive crates with no safe upgrade: oo7, ashpd and xcap (Linux keyring, portals, screen capture)
+# pull the standalone zbus crates, which were merged into zbus 6. Re-check when those crates move to zbus 6.
+# These are maintenance notices, not vulnerabilities.
+ignore = [
+    { id = "RUSTSEC-2024-0370", reason = "proc-macro-error unmaintained, build-time macro pulled by a dependency" },
+    { id = "RUSTSEC-2026-0370", reason = "zbus_names unmaintained, merged into zbus 6, pulled by oo7, ashpd, xcap" },
+    { id = "RUSTSEC-2026-0371", reason = "zvariant unmaintained, merged into zbus 6, pulled by oo7, ashpd, xcap" },
+    { id = "RUSTSEC-2026-0372", reason = "zvariant_derive unmaintained, merged into zbus 6, pulled by oo7, ashpd, xcap" },
+]
 
 [licenses]
 confidence-threshold = 0.9
