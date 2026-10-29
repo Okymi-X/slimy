@@ -8,8 +8,17 @@ import { launch, sleep } from './cdp.mjs';
   const checks = [];
   const check = (name, ok) => { checks.push(ok); console.log(`${ok ? 'ok  ' : 'FAIL'} ${name}`); };
   const ev = (code) => page.evaluate(code);
+  // The slime may ask one of its own questions first (slower machines): decline it so the bubble is free, then wait for the text.
+  const bubbleHas = async (pattern) => {
+    for (let i = 0; i < 40; i++) {
+      await ev(`(() => { const b = document.querySelector('#bubble .ghost'); if (b && !b.hidden && b.offsetParent) b.click(); })()`);
+      if (await ev(`${pattern}.test(document.querySelector('#bubble')?.textContent ?? '')`)) return true;
+      await sleep(1500);
+    }
+    return false;
+  };
 
-  check('the morning briefing is said once at the first free moment', await ev(`/Good morning|Bonjour/.test(document.querySelector('#bubble')?.textContent ?? '')`));
+  check('the morning briefing is said once at the first free moment', await bubbleHas('/Good morning|Bonjour/'));
   await ev(`window.__menu.find((i) => i.id === 'perms').action()`);
   await sleep(900);
   check('the memory panel lists what the slime keeps', await ev(`document.querySelector('#perms .memory-box')?.textContent.includes('favorite_color: green')`));
@@ -36,9 +45,7 @@ import { launch, sleep } from './cdp.mjs';
 
   await ev(`document.querySelector('#settings .panel-buttons button:last-of-type')?.click()`);
   await ev(`window.__due = [{ text: 'drink water' }]`);
-  let announced = false;
-  for (let i = 0; i < 40 && !announced; i++) { await sleep(1500); announced = await ev(`/drink water/.test(document.querySelector('#bubble')?.textContent ?? '')`); }
-  check('a due reminder is announced in the bubble', announced);
+  check('a due reminder is announced in the bubble', await bubbleHas('/drink water/'));
   await page.shot('reminder');
   const errors = await page.errors();
   check('no page errors', errors.length === 0);
