@@ -24,7 +24,7 @@ base64 = "0.22"
 sherpa-onnx = "2"
 espeak-rs = { version = "0.2", optional = true }
 cpal = "0.15"
-rodio = { version = "0.20", default-features = false }
+rodio = { version = "0.23", default-features = false }
 bzip2 = "0.5"
 tar = "0.4"
 slimy-voice = { path = "../../../crates/slimy-voice" }
