@@ -43,7 +43,7 @@ tokio = { version = "1", features = ["time"] }
 [target.'cfg(any(target_os = "windows", target_os = "macos"))'.dependencies]
 enigo = "0.6"
 keyring = { version = "3", default-features = false, features = ["apple-native", "windows-native"] }
-active-win-pos-rs = "0.9"
+active-win-pos-rs = "0.11"
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]
