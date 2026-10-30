@@ -26,7 +26,7 @@ jobs:
           - { name: windows, os: windows-latest, experimental: true, bundles: "msi" }
           - { name: macos, os: macos-latest, experimental: true, bundles: "dmg" }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-24.04'
